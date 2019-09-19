@@ -33,7 +33,7 @@ public class WebLogAspect {
 	 * @author aleex007
 	 * @date 2018年7月12日 下午5:09:42
 	 */
-	@Pointcut("execution(public * com.dorun.core..*.*(..))")
+	@Pointcut("execution(public * com.dorun.core.dc.wechat.controller..*.*(..))")
 	public void webLog() {
 	}
 	

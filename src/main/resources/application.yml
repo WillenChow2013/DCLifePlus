@@ -4,9 +4,9 @@ spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:mysql://localhost:3306/myplus?useUnicode=true
-    username: root
-    password: p@ssw0rd
+    url: jdbc:sqlserver://47.92.204.214:5602;database=DORUN_LIFE;integratedSecurity=false
+    username: sa
+    password: Dorun123456
     druid:
       initial-size: 8
       min-idle: 1
@@ -30,7 +30,12 @@ pay-type:
   wechat: 微信发票
   alipay: 支付宝发票
 logging:
-  path: d:\log
+  path: /Volumes/code/log
   level:
     org.springframework.web: DEBUG
     com.core: DEBUG
+netty:
+  address: 127.0.0.1
+  port: 9020
+txt:
+  path: /Volumes/code/product/
