@@ -16,6 +16,7 @@ import com.jcraft.jsch.JSchException;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -48,9 +49,16 @@ public class LifeOrderServiceImpl extends ServiceImpl<LifeOrderMapper, LifeOrder
     @Value("${txt.path}")
     private String path;
 
+    @Value("${ftp.wx.username}")
+    private String userName;
+
+    @Value("${ftp.wx.password}")
+    private String password;
+
     @Autowired
     private FTPTool ftpTool;
 
+    @Async
     @Override
     public void generatorOrderFile(String date) {
 
@@ -60,7 +68,7 @@ public class LifeOrderServiceImpl extends ServiceImpl<LifeOrderMapper, LifeOrder
         List<OrgInfo> orgInfoList = orgInfoMapper.selectList(orgInfoQueryWrapper);
 
         if(StringUtils.isBlank(date))
-            date = Tools.toDateString(Tools.getCurrentTime());
+            date = Tools.getPastDate(1);
 
         for (OrgInfo oi : orgInfoList) {
             QueryWrapper<LifeOrder> queryWrapper = new QueryWrapper<>();
@@ -79,7 +87,7 @@ public class LifeOrderServiceImpl extends ServiceImpl<LifeOrderMapper, LifeOrder
 
             }
 
-            ftpTool.uploadFIle(path,fileName + ".txt","");
+            ftpTool.uploadFIle(path,fileName + ".txt","",userName,password);
         }
 
     }

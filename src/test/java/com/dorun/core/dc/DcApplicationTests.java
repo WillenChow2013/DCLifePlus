@@ -49,7 +49,7 @@ public class DcApplicationTests {
 //        System.out.println(webServiceServiceImpl.pay("01234567","4200000333201905078482312157",payType,"3.00"));
 //        System.out.println(txtUtil.creatTxtFile("test"));
 //        alipayOrderService.generatorOrderFile();
-        lifeOrderService.generatorOrderFile("2019-09-24");
+//        lifeOrderService.generatorOrderFile("2019-09-24");
     }
 
 }

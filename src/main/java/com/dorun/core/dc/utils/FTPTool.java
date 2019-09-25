@@ -22,35 +22,29 @@ public class FTPTool {
     @Value("${ftp.port}")
     private int port;
 
-    @Value("${ftp.username}")
-    private String userName;
 
-    @Value("${ftp.password}")
-    private String password;
-
-
-    public FTPClient getFTPClient(){
+    public FTPClient getFTPClient(String userName, String password) {
         FTPClient ftpClient = null;
 
         ftpClient = new FTPClient();
 
         try {
             log.info("---------------------------------------------------------------------");
-            log.info("开始连接FTP服务器,host:[{}],,port:[{}]",host,port);
+            log.info("开始连接FTP服务器,host:[{}],,port:[{}]", host, port);
             log.info("---------------------------------------------------------------------");
-            ftpClient.connect(host,port);
+            ftpClient.connect(host, port);
 
             log.info("---------------------------------------------------------------------");
-            log.info("开始登录FTP服务器,userName:[{}],,password:[{}]",userName,password);
+            log.info("开始登录FTP服务器,userName:[{}],,password:[{}]", userName, password);
             log.info("---------------------------------------------------------------------");
 
-            ftpClient.login(userName,password);
+            ftpClient.login(userName, password);
 
-            if(!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())){
+            if (!FTPReply.isPositiveCompletion(ftpClient.getReplyCode())) {
                 log.info("---------------------------------------------------------------------");
                 log.info("登录FTP服务器失败，请检查参数设置");
                 log.info("---------------------------------------------------------------------");
-            }else{
+            } else {
                 log.info("---------------------------------------------------------------------");
                 log.info("恭喜！登录FTP服务器成功");
                 log.info("---------------------------------------------------------------------");
@@ -61,11 +55,11 @@ public class FTPTool {
         }
 
 
-        return  ftpClient;
+        return ftpClient;
     }
 
-    public void uploadFIle(String dstPath,String fileName,String targetPath){
-        FTPClient  ftpClient = getFTPClient();
+    public void uploadFIle(String dstPath, String fileName, String targetPath,String userName, String password) {
+        FTPClient ftpClient = getFTPClient(userName,password);
 
         ftpClient.enterLocalPassiveMode();
         try {
@@ -74,13 +68,13 @@ public class FTPTool {
 
             InputStream is = new FileInputStream(localFile);
 
-            String ftpPath = (StringUtils.isBlank(targetPath)? "" : targetPath) + "/" + fileName.substring(fileName.lastIndexOf("/") + 1);
+            String ftpPath = (StringUtils.isBlank(targetPath) ? "" : targetPath) + "/" + fileName.substring(fileName.lastIndexOf("/") + 1);
 
             log.info("---------------------------------------------------------------------");
-            log.info("文件上传到FTP服务器的路径：[{}]",ftpPath);
+            log.info("文件上传到FTP服务器的路径：[{}]", ftpPath);
             log.info("---------------------------------------------------------------------");
 
-            ftpClient.storeFile(ftpPath,is);
+            ftpClient.storeFile(ftpPath, is);
 
             is.close();
             log.info("---------------------------------------------------------------------");
@@ -92,6 +86,9 @@ public class FTPTool {
         } finally {
             try {
                 ftpClient.disconnect();
+                log.info("---------------------------------------------------------------------");
+                log.info("ftp连接成功关闭");
+                log.info("---------------------------------------------------------------------");
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -12,5 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  * @since 2019-09-20
  */
 public interface IAlipayOrderService extends IService<AlipayOrder> {
-    void generatorOrderFile();
+    void generatorOrderFile(String date);
 }

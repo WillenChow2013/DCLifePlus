@@ -29,6 +29,13 @@ public class TxtUtil {
             }
 
             flag = true;
+        }else {
+            fileName.delete();
+            try {
+                fileName.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
         return flag;
