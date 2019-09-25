@@ -2,6 +2,7 @@ package com.dorun.core.dc;
 
 import com.dorun.core.dc.mapper.OrgInfoMapper;
 import com.dorun.core.dc.model.OrgInfo;
+import com.dorun.core.dc.service.IAlipayOrderService;
 import com.dorun.core.dc.service.ILifeOrderService;
 import com.dorun.core.dc.utils.DESUtil;
 import com.dorun.core.dc.utils.HttpUtil;
@@ -38,13 +39,17 @@ public class DcApplicationTests {
     @Autowired
     private ILifeOrderService lifeOrderService;
 
+    @Autowired
+    private IAlipayOrderService alipayOrderService;
+
     @Test
     public void contextLoads() {
 //        {"success":"100","userid":"01234567","username":"电子发票测试","useraddress":"江山如画9#楼1403-2","prestore":"0.00","amountsum":"2.76","lateamount":"0.00","monthcount":"1","YJamount":"2.76"}
 //        System.out.println(webServiceServiceImpl.getUserInfo("02250214"));02250214
 //        System.out.println(webServiceServiceImpl.pay("01234567","4200000333201905078482312157",payType,"3.00"));
 //        System.out.println(txtUtil.creatTxtFile("test"));
-        lifeOrderService.generatorOrderFile();
+//        alipayOrderService.generatorOrderFile();
+        lifeOrderService.generatorOrderFile("2019-09-24");
     }
 
 }

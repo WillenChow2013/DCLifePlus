@@ -43,7 +43,5 @@ public class OrgInfo implements Serializable {
 
     private String type;
 
-    private String orgAbbre;
-
 
 }

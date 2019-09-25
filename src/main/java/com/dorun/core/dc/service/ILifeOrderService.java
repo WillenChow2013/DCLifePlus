@@ -13,6 +13,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface ILifeOrderService extends IService<LifeOrder> {
 
-    void generatorOrderFile();
+    void generatorOrderFile(String date);
 
 }

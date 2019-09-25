@@ -59,7 +59,7 @@ public class WxPayController {
     }
 
     /**
-     * 嚣张
+     * 销账
      * @param requestBody
      * @return
      */

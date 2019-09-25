@@ -7,9 +7,15 @@ import com.dorun.core.dc.mapper.LifeOrderMapper;
 import com.dorun.core.dc.model.OrgInfo;
 import com.dorun.core.dc.service.ILifeOrderService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.dorun.core.dc.utils.FTPTool;
+import com.dorun.core.dc.utils.SFTPTool;
 import com.dorun.core.dc.utils.Tools;
 import com.dorun.core.dc.utils.TxtUtil;
+import com.jcraft.jsch.ChannelSftp;
+import com.jcraft.jsch.JSchException;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -39,31 +45,42 @@ public class LifeOrderServiceImpl extends ServiceImpl<LifeOrderMapper, LifeOrder
     @Resource
     private TxtUtil txtUtil;
 
+    @Value("${txt.path}")
+    private String path;
+
+    @Autowired
+    private FTPTool ftpTool;
+
     @Override
-    public void generatorOrderFile() {
+    public void generatorOrderFile(String date) {
 
-        List<OrgInfo> orgInfoList = orgInfoMapper.selectList(null);
+        QueryWrapper<OrgInfo> orgInfoQueryWrapper = new QueryWrapper<>();
+        orgInfoQueryWrapper.eq("id", "190422BPK95P0568");
 
-        for (String date : Tools.findDaysStr("2019-09-01","2019-09-18")){
-            for (OrgInfo oi : orgInfoList) {
-                QueryWrapper<LifeOrder> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("org_id", oi.getOrgId());
-                queryWrapper.between("pay_time", date + " 00:00:00", date + " 23:59:59");
-                List<LifeOrder> lifeOrderList = lifeOrderMapper.selectList(queryWrapper);
+        List<OrgInfo> orgInfoList = orgInfoMapper.selectList(orgInfoQueryWrapper);
 
-                String fileName = "/" + oi.getOrgAbbre() +"/" +  "ZLS16" + date.replaceAll("-","");
+        if(StringUtils.isBlank(date))
+            date = Tools.toDateString(Tools.getCurrentTime());
 
-                txtUtil.creatTxtFile(fileName);
+        for (OrgInfo oi : orgInfoList) {
+            QueryWrapper<LifeOrder> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("org_id", oi.getOrgId());
+            queryWrapper.between("pay_time", date + " 00:00:00", date + " 23:59:59");
+            List<LifeOrder> lifeOrderList = lifeOrderMapper.selectList(queryWrapper);
 
-                for (LifeOrder lo : lifeOrderList) {
-                    String ctx = lo.getTransactionId() + "|" + lo.getConsNo() + "|"  + Tools.toDateString(lo.getPayTime()).split((" "))[0].replaceAll("-","") + "|" + lo.getRcvedAmt().setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "|";
-                    txtUtil.writeTxtFile(ctx, fileName);
-                }
+            String fileName = "/" + oi.getOrgId() + "/" + "ZLS16" + date.replaceAll("-", "");
+
+            txtUtil.creatTxtFile(fileName);
+
+
+            for (LifeOrder lo : lifeOrderList) {
+                String ctx = lo.getTransactionId() + "|" + lo.getConsNo() + "|" + Tools.toDateString(lo.getPayTime()).split((" "))[0].replaceAll("-", "") + "|" + lo.getRcvedAmt().setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "|";
+                txtUtil.writeTxtFile(ctx, fileName);
 
             }
+
+            ftpTool.uploadFIle(path,fileName + ".txt","");
         }
-
-
 
     }
 
