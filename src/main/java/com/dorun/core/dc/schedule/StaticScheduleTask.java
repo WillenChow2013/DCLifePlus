@@ -18,12 +18,8 @@ public class StaticScheduleTask {
     private ILifeOrderService lifeOrderService;
 
     @Scheduled(cron = "0 0 10 * * *")
-    public void sendWxLifeOrder(){
-        lifeOrderService.generatorOrderFile(null);
-    }
-
-    @Scheduled(cron = "0 0 10 * * *")
     public void sendAliOrder(){
+        lifeOrderService.generatorOrderFile(null);
         alipayOrderService.generatorOrderFile(null);
     }
 
